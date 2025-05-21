@@ -41,7 +41,7 @@ public class Mago {
 	}
 	
 	public boolean colisionaPorDerecha(Entorno entorno) {
-		return this.x + (this.ancho+500)/2 >= entorno.ancho();
+		return this.x + (this.ancho+505)/2 >= entorno.ancho();
 	}
 
 	public boolean colisionaPorIzquierda(Entorno entorno) {
