@@ -15,6 +15,11 @@ public class Juego extends InterfaceJuego
 	private Mana mana;
 	private ArrayList<Roca> rocas;
     private ArrayList<Murcielago> murcielagos;
+    private int contadorSpawn = 0;
+    private int tiempoSpawn = 180;
+    private int totalMurcielagosDerrotados = 0;
+    private int enemigosAMatar = 50;
+    private int murcielagosEnPantalla = 0;
 	
 	// Variables y métodos propios de cada grupo
 	// ...
@@ -75,12 +80,54 @@ public class Juego extends InterfaceJuego
 		if(entorno.estaPresionada(entorno.TECLA_ABAJO) && !mago.colisionaPorAbajo(entorno)&& mago.colisionConAlgunaRoca(rocas, 0 , 5 ) == false) {
 			mago.moverAbajo(entorno);
 		}
+        
+		if (contadorSpawn >= tiempoSpawn && totalMurcielagosDerrotados < enemigosAMatar && murcielagosEnPantalla <11) {
+            spawnMurcielago();
+            contadorSpawn = 0;
+        }
+        contadorSpawn++;
+		
+        for (int i = 0; i < murcielagos.size(); i++) {
+            Murcielago m = murcielagos.get(i);
+            
+            if (m != null) {
+                if (m.Persigue(1, mago)) {
+                }
+                
+                if (!m.estaVivo()) {
+                    murcielagos.set(i, null);
+                }
+            }
+        }
+		
+		}
+		
+		public void spawnMurcielago() {
+		    int lado = (int)(Math.random() * 4); 
+		    double x = 0, y = 0;
+		    
+		    if (lado == 0) { // arriba
+		        x = Math.random() * (entorno.ancho()-200);
+		        y = -20;
+		    }
+		    else if (lado == 2) { // abajo
+		        x = Math.random() * (entorno.ancho()-200);
+		        y = entorno.alto() + 20;
+		    }
+		    else if (lado == 1) { // der
+		        x = entorno.ancho() - 200;
+		        y = Math.random() * entorno.alto();
+		    }
+		    else { // izq
+		        x = -20;
+		        y = Math.random() * entorno.alto();
+		    }
+		    
+		    murcielagos.add(new Murcielago(x, y, 20, 20, Color.YELLOW));
+		}
 		
 		
 		
-		
-		
-			}
 	public void dibujarObjetos() {
 		if(this.mago != null) {
 			this.mago.dibujar(entorno);
@@ -92,10 +139,11 @@ public class Juego extends InterfaceJuego
 		}
 		if (murcielagos != null) {
 	        for(Murcielago m : murcielagos) {
+	        	if (m != null) {
 	            m.dibujar(entorno);		        
 	            }
 		    }	
-	
+		}
 	
 	
 	}
