@@ -10,38 +10,46 @@ public class Mago {
 	private double x,y;
 	private double ancho,alto;
 	private Color color;
+	private double hp;
+	private double mana;
+	private double hpMaxima;
+
 	
-	public Mago(double x,double y,double ancho,double alto, Color color) {
+	public Mago(double x,double y,double ancho,double alto, Color color, double hp, double mana) {
 		this.x = x;
 		this.y = y;
 		this.ancho = ancho;
 		this.alto = alto;
 		this.color = color;
+		this.hp = hp;
+		this.mana = mana;
+	    this.hpMaxima = hp;
 		
+	
 	}
 	public void dibujar(Entorno entorno) {
 		entorno.dibujarRectangulo(x, y, ancho, alto, 0, color);
 		}
 	
 	public void moverDerecha(Entorno entorno) {
-		this.x +=5;
+		this.x +=3;
 		
 	}
 	public void moverIzquierda(Entorno entorno) {
-		this.x -=5;
+		this.x -=3;
 		
 	}
 	public void moverArriba(Entorno entorno) {
-		this.y -=5;
+		this.y -=3;
 		
 	}
 	public void moverAbajo(Entorno entorno) {
-		this.y +=5;
+		this.y +=3;
 		
 	}
 	
 	public boolean colisionaPorDerecha(Entorno entorno) {
-		return this.x + (this.ancho+505)/2 >= entorno.ancho();
+		return this.x + (this.ancho)/2 >= entorno.ancho() -entorno.ancho()/4;
 	}
 
 	public boolean colisionaPorIzquierda(Entorno entorno) {
@@ -56,6 +64,16 @@ public class Mago {
 		return this.y + this.alto/2 >= entorno.alto();
 	}
 	
+	public boolean estaVivo(Mago mago) {
+		if (this.hp <= 0) {
+			mago = null;
+		if (mago == null) {
+			return false;
+		}
+		
+		}
+		return true;
+	}
 	
 	
 	public double getX() {
@@ -104,6 +122,23 @@ public class Mago {
 		this.alto = alto;
 	}
 	
+	 
+	
+		public double getHp() {
+		return hp;
+	}
+	public void setHp(double hp) {
+		this.hp = hp;
+	}
+	public double getMana() {
+		return mana;
+	}
+	public void setMana(double mana) {
+		this.mana = mana;
+	}
+	public double getHpMaxima() {
+		return hpMaxima;
+	}
 		public boolean colisionConRoca(Roca r, double xr, double yr) {
 			if(r == null) {
 				return false;
@@ -131,7 +166,7 @@ public class Mago {
 
 	        return false;
 	    }
-		
+
 		public boolean colisionConAlgunaRoca(ArrayList<Roca> rocas, double dx, double dy) {
 		    if (rocas == null || rocas.isEmpty()) return false;
 
@@ -143,11 +178,55 @@ public class Mago {
 		    return false; 
 		}
 		
-	}
 	
-	
-	
-	
-	
+		
+		public boolean colisionConMurcielago(Murcielago m, double xr, double yr) {
+			if(m == null) {
+				return false;
+			}
+			double ladoIzquierdo = this.x - (this.ancho/2);
+			double ladoDerecho = this.x + (this.ancho/2);
+			double ladoSuperior = this.y - (this.alto/2);
+			double ladoInferior = this.y + (this.alto/2);
+			
+			double xCercano = Math.max(ladoIzquierdo, Math.min(m.getX(), ladoDerecho));
+			double yCercano = Math.max(ladoSuperior, Math.min(m.getY(), ladoInferior));
+			
+			double alto= yCercano - m.getY();
+			double ancho= xCercano - m.getX();
+			double distancia = (int) Math.sqrt( Math.pow(alto, 2) + Math.pow(ancho, 2));
+			
+			boolean colisiona = distancia <= (m.getDiametro() / 2);
 
+	        if (colisiona) {
+	            if (xr > 0 && this.x < m.getX()) return true;
+	            if (xr < 0 && this.x > m.getX()) return true;
+	            if (yr > 0 && this.y < m.getY()) return true; 
+	            if (yr < 0 && this.y > m.getY()) return true;
+	        }
 
+	        return false;
+	    }
+		public boolean colisionConAlgunMurcielago(ArrayList<Murcielago> murcielagos, double xm, double ym) {
+		    if (murcielagos != null) {
+		        for (int i = 0; i < murcielagos.size(); i++) {
+		            Murcielago m = murcielagos.get(i);
+		            if (colisionConMurcielago(m, xm, ym)) {
+		                murcielagos.remove(i);// Asignar a null el murciélago que colisionó
+		               
+		                
+		                return true; // Se detectó colisión
+		            }
+		        }
+		    }
+		    return false; // No hubo colisión
+
+}
+		 public void recibirDano(int cantidad) {
+		        this.hp -= cantidad;
+		        if (this.hp < 0) {
+		            this.hp = 0; // No permite valores negativos
+		        }
+		    }
+
+}
