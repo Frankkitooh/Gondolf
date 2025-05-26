@@ -15,10 +15,12 @@ public class Menu {
         this.alto = alto;
         this.colorFondo = new Color(200, 200, 200, 150); 
     }
-    
 	public void dibujar(Entorno entorno) {
-	    entorno.dibujarRectangulo(x, y, ancho, alto, 0, colorFondo);
-	}
+        entorno.dibujarRectangulo(x, y, ancho, alto, 0, colorFondo);
+    }
+    
+    
+    
 	
 	
 	
@@ -42,7 +44,6 @@ public double getAncho() {
 public double getAlto() {
 	return alto;
 }
-
 
 
 }

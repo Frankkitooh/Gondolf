@@ -116,8 +116,8 @@ public class Murcielago {
             }
         }
 	}
-	
-	public static void spawnMurcielago(ArrayList<Murcielago> murcielagos, Entorno entorno,double x, double y) {
+
+public static void spawnMurcielago(ArrayList<Murcielago> murcielagos, Entorno entorno,double x, double y) {
 	    int lado = (int)(Math.random() * 4); 
 	    if (lado == 0) { // arriba
 	        x = Math.random() * (entorno.ancho()-200);
@@ -137,10 +137,7 @@ public class Murcielago {
 	    }
 	    murcielagos.add(new Murcielago(x, y, 20, 20, Color.YELLOW, true, lado));
 	}
-	
-	
-	
-	
+
 	public double getX() {
 		return x;
 	}
