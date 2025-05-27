@@ -13,7 +13,7 @@ public class Menu {
         this.y = y;
         this.ancho = ancho;
         this.alto = alto;
-        this.colorFondo = new Color(200, 200, 200, 150); 
+        this.colorFondo = new Color(100, 100, 60); 
     }
 	public void dibujar(Entorno entorno) {
         entorno.dibujarRectangulo(x, y, ancho, alto, 0, colorFondo);
