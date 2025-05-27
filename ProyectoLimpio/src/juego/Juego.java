@@ -11,8 +11,6 @@ public class Juego extends InterfaceJuego
 	private Entorno entorno;
 	private Menu menu;
 	private Mago mago;
-	private Vida vida;
-	private Mana mana;
 	private ArrayList<Roca> rocas;
     private ArrayList<Murcielago> murcielagos;
     private ArrayList<Boton> boton;
