@@ -14,11 +14,15 @@ public class Juego extends InterfaceJuego
 	private ArrayList<Roca> rocas;
     private ArrayList<Murcielago> murcielagos;
     private ArrayList<Boton> boton;
+    private ArrayList<Hechizo> hechizos;
     private Boton botonVida;
     private Boton botonMana;
     private Boton hechizoBasico;
-    private Boton hechizoMana;
-    private Boton ulti;
+    private Boton hechizoSec;
+    private Boton hechizoUlti;
+    private Hechizo basico;
+    private Hechizo secundario;
+    private Hechizo ulti;
     private Musica musica;
     private Musica musicaFin;
 
@@ -43,15 +47,19 @@ public class Juego extends InterfaceJuego
 		boton.add(new Boton (menuX - menuX/3,menuY*0.2, 120, 60, Color.YELLOW, "basico"));//hechizo
 		hechizoBasico =(new Boton (menuX - menuX/3,menuY*0.2, 120, 60, Color.ORANGE, null));
 		boton.add(new Boton(menuX - menuX/3,menuY*0.45, 120, 60, Color.yellow,"hechizo"));//hechizo 
-		hechizoMana =(new Boton (menuX - menuX/3,menuY*0.2, 120, 60, Color.ORANGE, null));
+		hechizoSec =(new Boton (menuX - menuX/3,menuY*0.2, 120, 60, Color.ORANGE, null));
 		boton.add(new Boton(menuX - menuX/3,menuY*0.70, 120, 60, Color.yellow,"ulti" ));//hechizo
-		ulti=(new Boton (menuX - menuX/3,menuY*0.2, 120, 60, Color.ORANGE, null));
+		hechizoUlti=(new Boton (menuX - menuX/3,menuY*0.2, 120, 60, Color.ORANGE, null));
 		
 		boton.add(new Boton(menuX - menuX/3.3,menuY*1.25, 180, 30, Color.lightGray, "HP"));//vida descontada
 		botonVida = new Boton(menuX - menuX/3.3,menuY*1.25, 180, 30, Color.RED, "HP");//vida	
-		botonMana = new Boton(menuX - menuX/3.3, menuY*1.40, 180,30,Color.lightGray,"Mana");
-		boton.add(new Boton(menuX - menuX/3.3,menuY*1.40, 180, 30, Color.BLUE, "Mana"));//mana descontado
+		botonMana = new Boton(menuX - menuX/3.3, menuY*1.40, 180,30,Color.BLUE,"Mana");
+		boton.add(new Boton(menuX - menuX/3.3,menuY*1.40, 180, 30, Color.lightGray, "Mana"));//mana descontado
 
+		hechizos = new ArrayList<>();
+		basico= new Hechizo("Basico", 0, 10, 3, null);
+	    secundario=new Hechizo("sec", 25, 20, 3, Color.red);
+		ulti=new Hechizo("ulti", 100, 100, 3, Color.blue);
 		
 		
 		rocas = new ArrayList<>();
@@ -86,7 +94,9 @@ public class Juego extends InterfaceJuego
 		// ...
 		this.dibujarObjetos();
 		
-		botonVida.dibujar(entorno);
+		
+	    botonVida.dibujar(entorno);
+	    botonMana.dibujar(entorno);
 		
 		if(mago.estaVivo(mago)) {
 			
@@ -115,6 +125,10 @@ public class Juego extends InterfaceJuego
                 }
             }
 		}
+		
+		
+		
+		
 		
         }
         if (mago.colisionConAlgunMurcielago(murcielagos, 0, 3)|| 
@@ -204,6 +218,7 @@ public class Juego extends InterfaceJuego
 	            }
 		    }	
 		}
+		
 		menu.dibujar(entorno);
 		if(boton !=null) {
 			for(Boton b : boton) {
