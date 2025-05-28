@@ -35,8 +35,8 @@ public class Juego extends InterfaceJuego
 		// Inicializa el objeto entorno
 		this.entorno = new Entorno(this, "El Camino de Gondolf - Grupo 12", 1024, 600);
 		this.entorno.setBackground(Color.white);
-        double menuX = entorno.ancho()+entorno.ancho()/4;
-        double menuY = 0.5*entorno.alto();
+		double menuX = entorno.ancho()+entorno.ancho()/4;
+	    double menuY = 0.5*entorno.alto();
         menu = new Menu(menuX,menuY,entorno.ancho(),entorno.alto());
 		
 		// Inicializar lo que haga falta para el juego
@@ -44,22 +44,22 @@ public class Juego extends InterfaceJuego
 		mago = new Mago((entorno.ancho()-250)/2, entorno.alto()/2, 25, 40, Color.red, 100, 250);
 		
 		boton = new ArrayList<>();
-		boton.add(new Boton (menuX - menuX/3,menuY*0.2, 120, 60, Color.YELLOW, "basico"));//hechizo
-		hechizoBasico =(new Boton (menuX - menuX/3,menuY*0.2, 120, 60, Color.ORANGE, null));
-		boton.add(new Boton(menuX - menuX/3,menuY*0.45, 120, 60, Color.yellow,"hechizo"));//hechizo 
-		hechizoSec =(new Boton (menuX - menuX/3,menuY*0.2, 120, 60, Color.ORANGE, null));
-		boton.add(new Boton(menuX - menuX/3,menuY*0.70, 120, 60, Color.yellow,"ulti" ));//hechizo
-		hechizoUlti=(new Boton (menuX - menuX/3,menuY*0.2, 120, 60, Color.ORANGE, null));
+	//	boton.add(new Boton (menuX - menuX/3,menuY*0.2, 120, 60, Color.darkGray, "basico"));//hechizo
+		hechizoBasico =(new Boton (menuX - menuX/3,menuY*0.2, 120, 60, Color.ORANGE, "basico",false));
+	//	boton.add(new Boton(menuX - menuX/3,menuY*0.45, 120, 60, Color.darkGray,"hechizo"));//hechizo 
+		hechizoSec =(new Boton (menuX - menuX/3,menuY*0.45, 120, 60, Color.ORANGE, "bomba",false));
+	//	boton.add(new Boton(menuX - menuX/3,menuY*0.70, 120, 60, Color.darkGray,"ulti" ));//hechizo
+		hechizoUlti=(new Boton (menuX - menuX/3,menuY*0.70, 120, 60, Color.ORANGE, "xd lol",false));
 		
-		boton.add(new Boton(menuX - menuX/3.3,menuY*1.25, 180, 30, Color.lightGray, "HP"));//vida descontada
-		botonVida = new Boton(menuX - menuX/3.3,menuY*1.25, 180, 30, Color.RED, "HP");//vida	
-		botonMana = new Boton(menuX - menuX/3.3, menuY*1.40, 180,30,Color.BLUE,"Mana");
-		boton.add(new Boton(menuX - menuX/3.3,menuY*1.40, 180, 30, Color.lightGray, "Mana"));//mana descontado
+		boton.add(new Boton(menuX - menuX/3.3,menuY*1.25, 180, 30, Color.darkGray, "HP",false));//vida descontada
+		botonVida = new Boton(menuX - menuX/3.3,menuY*1.25, 180, 30, Color.RED, "HP",false);//vida	
+		botonMana = new Boton(menuX - menuX/3.3, menuY*1.40, 180,30,Color.BLUE,"Mana",false);
+		boton.add(new Boton(menuX - menuX/3.3,menuY*1.40, 180, 30, Color.lightGray, "Mana",false));//mana descontado
 
 		hechizos = new ArrayList<>();
-		basico= new Hechizo("Basico", 0, 10, 3, null);
-	    secundario=new Hechizo("sec", 25, 20, 3, Color.red);
-		ulti=new Hechizo("ulti", 100, 100, 3, Color.blue);
+		basico= new Hechizo("Basico",entorno.mouseX(),entorno.mouseY(), 0, 30, 0, null);
+	  //  secundario=new Hechizo("sec", 25, 20, 3, menuY, 0, Color.red);
+	//	ulti=new Hechizo("ulti", 100, 100, 3, menuY, 0, Color.blue);
 		
 		
 		rocas = new ArrayList<>();
@@ -115,16 +115,19 @@ public class Juego extends InterfaceJuego
 		if((entorno.estaPresionada(entorno.TECLA_ABAJO )|| entorno.estaPresionada('s')) && !mago.colisionaPorAbajo(entorno)&& mago.colisionConAlgunaRoca(rocas, 0 , 5 ) == false) {
 			mago.moverAbajo(entorno);
 		}
+		
+	
+		if(hechizoBasico.estaSeleccionado(entorno, entorno.mouseX() , entorno.mouseY(), botonMana)&& basico.puedeLanzarse(entorno, entorno.ancho()+entorno.ancho()/4, hechizoBasico)){
+			
+			if(entorno.sePresionoBoton(entorno.BOTON_IZQUIERDO)) {
+				basico.lanzar(mago, murcielagos, entorno, hechizoBasico, basico);
+				basico.hacerDanio(murcielagos, entorno.mouseX(), entorno.mouseY());
+			}
+		} 
         
 		mantenerMurcielagos();
+		perseguirMago();
 		
-		if (murcielagos != null) {
-            for (Murcielago m : murcielagos) {
-                if (m != null && m.estaVivo()) {
-                    m.movimiento(1.3, mago); // Velocidad ajustada
-                }
-            }
-		}
 		
 		///hechizos
 			///if entorno.estaPresionado(entorno.BOTON_IZQUIERDO)
@@ -174,7 +177,15 @@ public class Juego extends InterfaceJuego
 		    
 		}
 		
-		
+		public void perseguirMago() {
+		if (murcielagos != null) {
+            for (Murcielago m : murcielagos) {
+                if (m != null && m.estaVivo()) {
+                    m.movimiento(1.3, mago); // Velocidad ajustada
+                }
+            }
+		}
+		}
 		public void mantenerMurcielagos() {
 		    int vivos = 0;
 		    for (Murcielago m : murcielagos) {
@@ -184,7 +195,7 @@ public class Juego extends InterfaceJuego
 		    }
 
 		    // Si hay menos de 20 murciélagos vivos, genera los necesarios
-		    while (vivos < 20) {
+		    while (vivos < 10) {
 		        spawnMurcielago();
 		        vivos++;
 		    }
@@ -227,10 +238,23 @@ public class Juego extends InterfaceJuego
 		}
 		
 		menu.dibujar(entorno);
+		
 		if(boton !=null) {
+			hechizoBasico.dibujar(entorno);
+			hechizoSec.dibujar(entorno);
+			hechizoUlti.dibujar(entorno);
 			for(Boton b : boton) {
 				b.dibujar(entorno);
 			}
+		}
+		if(hechizoBasico.estaSeleccionado(entorno, entorno.mouseX(), entorno.mouseY(), hechizoBasico)){
+		basico.dibujar(entorno);
+		if(entorno.sePresionoBoton(entorno.BOTON_IZQUIERDO)) {
+			basico.lanzar(mago, murcielagos, entorno, hechizoBasico,basico);
+			hechizoBasico.setSeleccionado(false);
+			
+		}
+		
 		}
 	
 	}

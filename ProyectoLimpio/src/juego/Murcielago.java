@@ -28,33 +28,14 @@ public class Murcielago {
 		this.color = color;
 		this.vivo = vivo;
 		this.hp = hp;
-
 	}
-	public Murcielago(double x, double y, double alto, double diametro, Color color, boolean vivo, int hp,
-			int contadorSpawn, int tiempoSpawn, int totalMurcielagosDerrotados, int enemigosAMatar,
-			int murcielagosEnPantalla, int i) {
-		this.x = x;
-		this.y = y;
-		this.alto = alto;
-		this.diametro = diametro;
-		this.color = color;
-		this.vivo = vivo;
-		this.hp = hp;
-		this.contadorSpawn = contadorSpawn;
-		this.tiempoSpawn = tiempoSpawn;
-		this.totalMurcielagosDerrotados = totalMurcielagosDerrotados;
-		this.enemigosAMatar = enemigosAMatar;
-		this.murcielagosEnPantalla = murcielagosEnPantalla;
-
-	}
+	
+	
+	
 	public void dibujar(Entorno entorno) {
 		entorno.dibujarCirculo(x, y, diametro, color);
 		}
 	
-
-	
-	
-	//
 	public void moverDerecha(double posicion, Mago mago) {
 	    if(this.x < mago.getX()) { 
 	        this.x += posicion;
@@ -105,38 +86,7 @@ public class Murcielago {
 	        return vivo;
 	    }
 	 
-	public void persigue(ArrayList<Murcielago> murcielagos,Mago mago) {
-		if(murcielagos != null) {
-        for (int i = 0; i < murcielagos.size(); i++) {
-            Murcielago m = murcielagos.get(i);
-            
-            if (m != null) {
-                m.movimiento(1, mago);
-            }
-            }
-        }
-	}
 
-public static void spawnMurcielago(ArrayList<Murcielago> murcielagos, Entorno entorno,double x, double y) {
-	    int lado = (int)(Math.random() * 4); 
-	    if (lado == 0) { // arriba
-	        x = Math.random() * (entorno.ancho()-200);
-	        y = -20;
-	    }
-	    else if (lado == 2) { // abajo
-	        x = Math.random() * (entorno.ancho()-200);
-	        y = entorno.alto() + 20;
-	    }
-	    else if (lado == 1) { // der
-	        x = entorno.ancho() - 200;
-	        y = Math.random() * entorno.alto();
-	    }
-	    else { // izq
-	        x = -20;
-	        y = Math.random() * entorno.alto();
-	    }
-	    murcielagos.add(new Murcielago(x, y, 20, 20, Color.YELLOW, true, lado));
-	}
 
 	public double getX() {
 		return x;

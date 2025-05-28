@@ -9,14 +9,16 @@ public class Boton {
 	private double ancho,alto;
 	private Color color;
 	private String str;
+	private boolean seleccionado;
 	
-	public Boton(double x, double y, double ancho, double alto, Color color, String str) {
+	public Boton(double x, double y, double ancho, double alto, Color color, String str, boolean seleccionado) {
 		this.x = x;
 		this.y = y;
 		this.ancho = ancho;
 		this.alto = alto;
 		this.color = color;
 		this.str = str;
+		this.seleccionado = seleccionado;
 	}
 	
 	
@@ -44,10 +46,11 @@ public class Boton {
 			xmouse = entorno.mouseX();
 			ymouse = entorno.mouseY();
 			
-			if(estaSobreBoton(entorno, xmouse, ymouse) == true && entorno.estaPresionado(entorno.BOTON_IZQUIERDO))  {
-				return true;
+			if(estaSobreBoton(entorno, xmouse, ymouse) && entorno.estaPresionado(entorno.BOTON_IZQUIERDO))  {
+				seleccionado=true;
+				return seleccionado;
 			}
-			return false;
+			return seleccionado;
 		}
 	
 	
@@ -57,6 +60,18 @@ public class Boton {
 	
 	
 	
+
+	public boolean isSeleccionado() {
+			return seleccionado;
+		}
+
+
+
+		public void setSeleccionado(boolean seleccionado) {
+			this.seleccionado = seleccionado;
+		}
+
+
 
 	public double getX() {
 		return x;
