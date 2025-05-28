@@ -13,6 +13,7 @@ public class Mago {
 	private double hp;
 	private double mana;
 	private double hpMaxima;
+	private double manaMaxima;
 
 	
 	public Mago(double x,double y,double ancho,double alto, Color color, double hp, double mana) {
@@ -75,7 +76,100 @@ public class Mago {
 		return true;
 	}
 	
+	public boolean colisionConRoca(Roca r, double xr, double yr) {
+		if(r == null) {
+			return false;
+		}
+		double ladoIzquierdo = this.x - (this.ancho/2);
+		double ladoDerecho = this.x + (this.ancho/2);
+		double ladoSuperior = this.y - (this.alto/2);
+		double ladoInferior = this.y + (this.alto/2);
+		
+		double xCercano = Math.max(ladoIzquierdo, Math.min(r.getX(), ladoDerecho));
+		double yCercano = Math.max(ladoSuperior, Math.min(r.getY(), ladoInferior));
+		
+		double alto= yCercano - r.getY();
+		double ancho= xCercano - r.getX();
+		double distancia = (int) Math.sqrt( Math.pow(alto, 2) + Math.pow(ancho, 2));
+		
+		boolean colisiona = distancia <= (r.getDiametro() / 2);
+
+        if (colisiona) {
+            if (xr > 0 && this.x < r.getX()) return true;
+            if (xr < 0 && this.x > r.getX()) return true;
+            if (yr > 0 && this.y < r.getY()) return true; 
+            if (yr < 0 && this.y > r.getY()) return true;
+        }
+
+        return false;
+    }
+
+	public boolean colisionConAlgunaRoca(ArrayList<Roca> rocas, double dx, double dy) {
+	    if (rocas == null || rocas.isEmpty()) return false;
+
+	    for (Roca r : rocas) {
+	        if (colisionConRoca(r, dx, dy)) {
+	            return true;
+	        }
+	    }
+	    return false; 
+	}
 	
+
+	
+	public boolean colisionConMurcielago(Murcielago m, double xr, double yr) {
+		if(m == null) {
+			return false;
+		}
+		double ladoIzquierdo = this.x - (this.ancho/2);
+		double ladoDerecho = this.x + (this.ancho/2);
+		double ladoSuperior = this.y - (this.alto/2);
+		double ladoInferior = this.y + (this.alto/2);
+		
+		double xCercano = Math.max(ladoIzquierdo, Math.min(m.getX(), ladoDerecho));
+		double yCercano = Math.max(ladoSuperior, Math.min(m.getY(), ladoInferior));
+		
+		double alto= yCercano - m.getY();
+		double ancho= xCercano - m.getX();
+		double distancia = (int) Math.sqrt( Math.pow(alto, 2) + Math.pow(ancho, 2));
+		
+		boolean colisiona = distancia <= (m.getDiametro() / 2);
+
+        if (colisiona) {
+            if (xr > 0 && this.x < m.getX()) return true;
+            if (xr < 0 && this.x > m.getX()) return true;
+            if (yr > 0 && this.y < m.getY()) return true; 
+            if (yr < 0 && this.y > m.getY()) return true;
+        }
+
+        return false;
+    }
+	public boolean colisionConAlgunMurcielago(ArrayList<Murcielago> murcielagos, double xm, double ym) {
+	    if (murcielagos != null) {
+	        for (int i = 0; i < murcielagos.size(); i++) {
+	            Murcielago m = murcielagos.get(i);
+	            if (m != null && colisionConMurcielago(m, xm, ym)) {
+	                murcielagos.set(i, null); // Asignar null al murciélago que colisionó
+	                return true; // Se detectó colisión
+	            }
+	        }
+	    }
+	    return false; // No hubo colisión
+	}
+	 public void recibirDano(int cantidad) {
+	        this.hp -= cantidad;
+	        if (this.hp < 0) {
+	            this.hp = 0; // No permite valores negativos
+	        }
+	    }
+	
+	
+	 public void gastarMana(int cantidad) {
+		 this.mana-=cantidad;
+	 }
+	 
+	 
+	 
 	public double getX() {
 		return x;
 	}
@@ -139,94 +233,12 @@ public class Mago {
 	public double getHpMaxima() {
 		return hpMaxima;
 	}
-		public boolean colisionConRoca(Roca r, double xr, double yr) {
-			if(r == null) {
-				return false;
-			}
-			double ladoIzquierdo = this.x - (this.ancho/2);
-			double ladoDerecho = this.x + (this.ancho/2);
-			double ladoSuperior = this.y - (this.alto/2);
-			double ladoInferior = this.y + (this.alto/2);
-			
-			double xCercano = Math.max(ladoIzquierdo, Math.min(r.getX(), ladoDerecho));
-			double yCercano = Math.max(ladoSuperior, Math.min(r.getY(), ladoInferior));
-			
-			double alto= yCercano - r.getY();
-			double ancho= xCercano - r.getX();
-			double distancia = (int) Math.sqrt( Math.pow(alto, 2) + Math.pow(ancho, 2));
-			
-			boolean colisiona = distancia <= (r.getDiametro() / 2);
+	public double getManaMaxima() {
+		return manaMaxima;
+	}
+	public void setManaMaxima(double manaMaxima) {
+		this.manaMaxima = manaMaxima;
+	}
 
-	        if (colisiona) {
-	            if (xr > 0 && this.x < r.getX()) return true;
-	            if (xr < 0 && this.x > r.getX()) return true;
-	            if (yr > 0 && this.y < r.getY()) return true; 
-	            if (yr < 0 && this.y > r.getY()) return true;
-	        }
-
-	        return false;
-	    }
-
-		public boolean colisionConAlgunaRoca(ArrayList<Roca> rocas, double dx, double dy) {
-		    if (rocas == null || rocas.isEmpty()) return false;
-
-		    for (Roca r : rocas) {
-		        if (colisionConRoca(r, dx, dy)) {
-		            return true;
-		        }
-		    }
-		    return false; 
-		}
-		
-	
-		
-		public boolean colisionConMurcielago(Murcielago m, double xr, double yr) {
-			if(m == null) {
-				return false;
-			}
-			double ladoIzquierdo = this.x - (this.ancho/2);
-			double ladoDerecho = this.x + (this.ancho/2);
-			double ladoSuperior = this.y - (this.alto/2);
-			double ladoInferior = this.y + (this.alto/2);
-			
-			double xCercano = Math.max(ladoIzquierdo, Math.min(m.getX(), ladoDerecho));
-			double yCercano = Math.max(ladoSuperior, Math.min(m.getY(), ladoInferior));
-			
-			double alto= yCercano - m.getY();
-			double ancho= xCercano - m.getX();
-			double distancia = (int) Math.sqrt( Math.pow(alto, 2) + Math.pow(ancho, 2));
-			
-			boolean colisiona = distancia <= (m.getDiametro() / 2);
-
-	        if (colisiona) {
-	            if (xr > 0 && this.x < m.getX()) return true;
-	            if (xr < 0 && this.x > m.getX()) return true;
-	            if (yr > 0 && this.y < m.getY()) return true; 
-	            if (yr < 0 && this.y > m.getY()) return true;
-	        }
-
-	        return false;
-	    }
-		public boolean colisionConAlgunMurcielago(ArrayList<Murcielago> murcielagos, double xm, double ym) {
-		    if (murcielagos != null) {
-		        for (int i = 0; i < murcielagos.size(); i++) {
-		            Murcielago m = murcielagos.get(i);
-		            if (colisionConMurcielago(m, xm, ym)) {
-		                murcielagos.remove(i);// Asignar a null el murciélago que colisionó
-		               
-		                
-		                return true; // Se detectó colisión
-		            }
-		        }
-		    }
-		    return false; // No hubo colisión
-
-}
-		 public void recibirDano(int cantidad) {
-		        this.hp -= cantidad;
-		        if (this.hp < 0) {
-		            this.hp = 0; // No permite valores negativos
-		        }
-		    }
 
 }
