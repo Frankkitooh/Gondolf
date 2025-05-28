@@ -126,7 +126,14 @@ public class Juego extends InterfaceJuego
             }
 		}
 		
-		
+		///hechizos
+			///if entorno.estaPresionado(entorno.BOTON_IZQUIERDO)
+			
+			//basico.estaSeleccionado(entorno, entorno.mouseX(), entorno.mouseY(), basico)) 
+			
+                        //  (basico.puedeLanzarse(entorno, 60, botonMana)) 
+                 //       basico.lanzar(mago, murcielagos, entorno, basico);
+                   //         
 		
 		
 		
