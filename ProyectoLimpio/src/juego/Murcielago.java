@@ -82,9 +82,16 @@ public class Murcielago {
         }
     }
 
-	 public boolean estaVivo() {
-	        return vivo;
-	    }
+	public boolean estaVivo(Murcielago murcielagos) {
+		if (this.hp <= 0) {
+			murcielagos = null;
+		if (murcielagos == null) {
+			return false;
+		}
+		
+		}
+		return true;
+	}
 	 
 
 

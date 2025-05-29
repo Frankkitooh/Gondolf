@@ -27,7 +27,7 @@ public class Hechizo {
 	}
 
 	public void dibujar(Entorno entorno) {
-		entorno.dibujarCirculo(entorno.mouseX(), entorno.mouseY(), radioEfecto, color);
+		entorno.dibujarCirculo(entorno.mouseX(), entorno.mouseY(), radioEfecto*2, color);
 		}
     
     public boolean puedeLanzarse(Entorno entorno, double anchoMenu, Boton boton) {
@@ -35,32 +35,36 @@ public class Hechizo {
                 entorno.mouseX() <= (entorno.ancho() - anchoMenu);
     }
     
-    public void lanzar(Mago mago,ArrayList<Murcielago> murcielagos, Entorno entorno, Boton boton,Hechizo hechizo) {
+    public void lanzar(Mago mago,ArrayList<Murcielago> murcielagos, Entorno entorno, Boton boton) {
         if (puedeLanzarse(entorno, entorno.ancho()/4, boton) && mago.getMana() >= costoMana) {
-            mago.gastarMana(this.costoMana);
-            hacerDanio(murcielagos, entorno.mouseX(), entorno.mouseY());
+        	 mago.gastarMana(costoMana);
             entorno.dibujarCirculo(entorno.mouseX(), entorno.mouseY(), radioEfecto, color);// Efecto visual del hechizo
+            hacerDanio(murcielagos, entorno.mouseX(), entorno.mouseY());
             boton.setSeleccionado(false);
         }
     }
     
+
+  
     public void hacerDanio(ArrayList<Murcielago> murcielagos, double x, double y) {
-    	for (int i = 0; i < murcielagos.size(); i++) {
-    		 Murcielago m = murcielagos.get(i);{
-            if (m != null && colisionConMurcielago(m, x, y)) {
+        for (int i = murcielagos.size() - 1; i >= 0; i--) {
+            Murcielago m = murcielagos.get(i);
+            if (m != null && m.estaVivo(m) && colisionConMurcielago(m, x, y)) {
                 m.recibirDano(this.danio);
-                murcielagos.set(i, null);
+                if (!m.estaVivo(m)) {
+                    murcielagos.set(i,null); // Mejor eliminar que poner null
+                }
             }
         }
     }
-    }
-    public boolean colisionConMurcielago(Murcielago m, double x, double y) {
-        if (m == null) {
+    
+    public boolean colisionConMurcielago(Murcielago m, double xHechizo, double yHechizo) {
+        if (m == null || !m.estaVivo(m)) {
             return false;
         }
         
-        double distanciaX = m.getX();
-        double distanciaY = m.getY();
+        double distanciaX = xHechizo - m.getX();
+        double distanciaY = yHechizo - m.getY();
         double distancia = Math.sqrt(distanciaX * distanciaX + distanciaY * distanciaY);
         
         return distancia <= (this.radioEfecto + m.getDiametro() / 2);
@@ -108,5 +112,6 @@ public class Hechizo {
 	public void setDanio(int danio) {
 		this.danio = danio;
 	}
-    
+
+   
 }

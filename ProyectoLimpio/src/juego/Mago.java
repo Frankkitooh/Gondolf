@@ -25,6 +25,7 @@ public class Mago {
 		this.hp = hp;
 		this.mana = mana;
 	    this.hpMaxima = hp;
+	    this.manaMaxima = mana;
 		
 	
 	}

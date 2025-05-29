@@ -57,9 +57,9 @@ public class Juego extends InterfaceJuego
 		boton.add(new Boton(menuX - menuX/3.3,menuY*1.40, 180, 30, Color.lightGray, "Mana",false));//mana descontado
 
 		hechizos = new ArrayList<>();
-		basico= new Hechizo("Basico",entorno.mouseX(),entorno.mouseY(), 0, 30, 0, null);
-	  //  secundario=new Hechizo("sec", 25, 20, 3, menuY, 0, Color.red);
-	//	ulti=new Hechizo("ulti", 100, 100, 3, menuY, 0, Color.blue);
+		basico= new Hechizo("Basico",entorno.mouseX(),entorno.mouseY(), 0, 20, 10, Color.MAGENTA);
+	   secundario=new Hechizo("sec",entorno.mouseX(), entorno.mouseY(), 20, 40, 30, Color.red);
+		ulti=new Hechizo("ulti", entorno.mouseX(), entorno.mouseY(), 50, 69, 50, Color.blue);
 		
 		
 		rocas = new ArrayList<>();
@@ -117,15 +117,9 @@ public class Juego extends InterfaceJuego
 		}
 		
 	
-		if(hechizoBasico.estaSeleccionado(entorno, entorno.mouseX() , entorno.mouseY(), botonMana)&& basico.puedeLanzarse(entorno, entorno.ancho()+entorno.ancho()/4, hechizoBasico)){
-			
-			if(entorno.sePresionoBoton(entorno.BOTON_IZQUIERDO)) {
-				basico.lanzar(mago, murcielagos, entorno, hechizoBasico, basico);
-				basico.hacerDanio(murcielagos, entorno.mouseX(), entorno.mouseY());
-			}
-		} 
-        
+
 		mantenerMurcielagos();
+		
 		perseguirMago();
 		
 		
@@ -141,6 +135,37 @@ public class Juego extends InterfaceJuego
 		
 		
         }
+		
+		
+		if(hechizoBasico.estaSeleccionado(entorno, entorno.mouseX() , entorno.mouseY(), hechizoBasico)&& basico.puedeLanzarse(entorno, entorno.ancho()+entorno.ancho()/4, hechizoBasico)){
+			
+			if(entorno.sePresionoBoton(entorno.BOTON_IZQUIERDO)) {
+				basico.lanzar(mago, murcielagos, entorno, hechizoBasico);
+				basico.hacerDanio(murcielagos, entorno.mouseX(), entorno.mouseY());
+				hechizoBasico.setSeleccionado(false);
+			}
+		} 
+		if(hechizoSec.estaSeleccionado(entorno, entorno.mouseX(), entorno.mouseY(), hechizoSec)){
+		secundario.dibujar(entorno);
+		if(entorno.sePresionoBoton(entorno.BOTON_IZQUIERDO)) {
+			secundario.lanzar(mago, murcielagos, entorno, hechizoSec);
+			secundario.hacerDanio(murcielagos, entorno.mouseX(), entorno.mouseY());
+			hechizoSec.setSeleccionado(false);
+			
+		}
+		
+		}
+	
+		if(hechizoUlti.estaSeleccionado(entorno, entorno.mouseX(), entorno.mouseY(), hechizoUlti) ){
+			ulti.dibujar(entorno);
+			if(entorno.sePresionoBoton(entorno.BOTON_DERECHO)&& mago.getMana()>= ulti.getCostoMana()) {
+				gastarMana(ulti.getCostoMana());
+				ulti.lanzar(mago, murcielagos, entorno, hechizoUlti);	
+				hechizoUlti.setSeleccionado(false);
+				
+			}
+		}
+		
         if (mago.colisionConAlgunMurcielago(murcielagos, 0, 3)|| 
         mago.colisionConAlgunMurcielago(murcielagos, 0, 3)||
         mago.colisionConAlgunMurcielago(murcielagos, 3, 0)||
@@ -180,7 +205,7 @@ public class Juego extends InterfaceJuego
 		public void perseguirMago() {
 		if (murcielagos != null) {
             for (Murcielago m : murcielagos) {
-                if (m != null && m.estaVivo()) {
+                if (m != null && m.estaVivo(m)) {
                     m.movimiento(1.3, mago); // Velocidad ajustada
                 }
             }
@@ -189,7 +214,7 @@ public class Juego extends InterfaceJuego
 		public void mantenerMurcielagos() {
 		    int vivos = 0;
 		    for (Murcielago m : murcielagos) {
-		        if (m != null && m.estaVivo()) {
+		        if (m != null && m.estaVivo(m)) {
 		            vivos++;
 		        }
 		    }
@@ -247,16 +272,38 @@ public class Juego extends InterfaceJuego
 				b.dibujar(entorno);
 			}
 		}
+
+			
+
+		
 		if(hechizoBasico.estaSeleccionado(entorno, entorno.mouseX(), entorno.mouseY(), hechizoBasico)){
-		basico.dibujar(entorno);
+			basico.dibujar(entorno);
+			if(entorno.sePresionoBoton(entorno.BOTON_IZQUIERDO)) {
+				basico.lanzar(mago, murcielagos, entorno, hechizoBasico);
+				hechizoBasico.setSeleccionado(false);
+				
+			}
+			
+			}
+		
+		if(hechizoSec.estaSeleccionado(entorno, entorno.mouseX(), entorno.mouseY(), hechizoSec)){
+		secundario.dibujar(entorno);
 		if(entorno.sePresionoBoton(entorno.BOTON_IZQUIERDO)) {
-			basico.lanzar(mago, murcielagos, entorno, hechizoBasico,basico);
-			hechizoBasico.setSeleccionado(false);
+			secundario.lanzar(mago, murcielagos, entorno, hechizoSec);
+			hechizoSec.setSeleccionado(false);
 			
 		}
 		
 		}
-	
+		
+		if(hechizoUlti.estaSeleccionado(entorno, entorno.mouseX(), entorno.mouseY(), hechizoUlti)){
+			ulti.dibujar(entorno);
+			if(entorno.sePresionoBoton(entorno.BOTON_IZQUIERDO)) {
+				ulti.lanzar(mago, murcielagos, entorno, hechizoUlti);
+				hechizoUlti.setSeleccionado(false);
+				
+			}
+		}
 	}
 	
 	
