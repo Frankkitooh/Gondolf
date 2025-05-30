@@ -25,6 +25,10 @@ public class Juego extends InterfaceJuego
     private Hechizo ulti;
     private Musica musica;
     private Musica musicaFin;
+    private MenuInicio menuInicio;
+    private boolean enMenuInicio;
+    private int enemigosGenerados;
+    private int enemigosAniquilados;
 
     
 	// Variables y métodos propios de cada grupo
@@ -35,6 +39,10 @@ public class Juego extends InterfaceJuego
 		// Inicializa el objeto entorno
 		this.entorno = new Entorno(this, "El Camino de Gondolf - Grupo 12", 1024, 600);
 		this.entorno.setBackground(Color.white);
+		this.menuInicio = new MenuInicio(entorno.ancho()/2, entorno.alto()/2, 400, 300);
+		this.enMenuInicio = true;
+		this.enemigosGenerados = 0;
+		
 		double menuX = entorno.ancho()+entorno.ancho()/4;
 	    double menuY = 0.5*entorno.alto();
         menu = new Menu(menuX,menuY,entorno.ancho(),entorno.alto());
@@ -58,8 +66,8 @@ public class Juego extends InterfaceJuego
 
 		hechizos = new ArrayList<>();
 		basico= new Hechizo("Basico",entorno.mouseX(),entorno.mouseY(), 0, 20, 10, Color.MAGENTA);
-	   secundario=new Hechizo("sec",entorno.mouseX(), entorno.mouseY(), 20, 40, 30, Color.red);
-		ulti=new Hechizo("ulti", entorno.mouseX(), entorno.mouseY(), 50, 69, 50, Color.blue);
+	    secundario=new Hechizo("sec",entorno.mouseX(), entorno.mouseY(), 20, 40, 30, Color.red);
+		ulti=new Hechizo("ulti", entorno.mouseX(), entorno.mouseY(), 100, 169, 50, Color.blue);
 		
 		
 		rocas = new ArrayList<>();
@@ -81,7 +89,6 @@ public class Juego extends InterfaceJuego
 		// Inicia el juego!
 		this.entorno.iniciar();
 	}
-
 	/**
 	 * Durante el juego, el método tick() será ejecutado en cada instante y 
 	 * por lo tanto es el método más importante de esta clase. Aquí se debe 
@@ -92,6 +99,11 @@ public class Juego extends InterfaceJuego
 	{
 		// Procesamiento de un instante de tiempo
 		// ...
+		if (enMenuInicio) {
+            dibujarMenuInicio();
+        	salirMenu();
+        } else {
+
 		this.dibujarObjetos();
 		
 		
@@ -123,59 +135,55 @@ public class Juego extends InterfaceJuego
 		perseguirMago();
 		
 		
-		///hechizos
-			///if entorno.estaPresionado(entorno.BOTON_IZQUIERDO)
-			
-			//basico.estaSeleccionado(entorno, entorno.mouseX(), entorno.mouseY(), basico)) 
-			
-                        //  (basico.puedeLanzarse(entorno, 60, botonMana)) 
-                 //       basico.lanzar(mago, murcielagos, entorno, basico);
-                   //         
-		
-		
-		
-        }
-		
-		
-		if(hechizoBasico.estaSeleccionado(entorno, entorno.mouseX() , entorno.mouseY(), hechizoBasico)&& basico.puedeLanzarse(entorno, entorno.ancho()+entorno.ancho()/4, hechizoBasico)){
-			
+		if(hechizoBasico.estaSeleccionado(entorno, entorno.mouseX(), entorno.mouseY(), hechizoBasico)&& mago.getMana()>= basico.getCostoMana() ){
+			basico.dibujar(entorno);
 			if(entorno.sePresionoBoton(entorno.BOTON_IZQUIERDO)) {
-				basico.lanzar(mago, murcielagos, entorno, hechizoBasico);
-				basico.hacerDanio(murcielagos, entorno.mouseX(), entorno.mouseY());
+				basico.lanzar( murcielagos, entorno, hechizoBasico, mago);	
+				gastarMana(basico.getCostoMana());
 				hechizoBasico.setSeleccionado(false);
+				
 			}
-		} 
-		if(hechizoSec.estaSeleccionado(entorno, entorno.mouseX(), entorno.mouseY(), hechizoSec)){
-		secundario.dibujar(entorno);
-		if(entorno.sePresionoBoton(entorno.BOTON_IZQUIERDO)) {
-			secundario.lanzar(mago, murcielagos, entorno, hechizoSec);
-			secundario.hacerDanio(murcielagos, entorno.mouseX(), entorno.mouseY());
-			hechizoSec.setSeleccionado(false);
-			
 		}
 		
+		if(hechizoSec.estaSeleccionado(entorno, entorno.mouseX(), entorno.mouseY(), hechizoSec)&& mago.getMana()>= secundario.getCostoMana() ){
+			secundario.dibujar(entorno);
+			if(entorno.sePresionoBoton(entorno.BOTON_IZQUIERDO)) {
+				secundario.lanzar( murcielagos, entorno, hechizoSec, mago);	
+				gastarMana(secundario.getCostoMana());
+				hechizoSec.setSeleccionado(false);
+				
+			}
 		}
 	
-		if(hechizoUlti.estaSeleccionado(entorno, entorno.mouseX(), entorno.mouseY(), hechizoUlti) ){
+		if(hechizoUlti.estaSeleccionado(entorno, entorno.mouseX(), entorno.mouseY(), hechizoUlti)&& mago.getMana()>= ulti.getCostoMana() ){
 			ulti.dibujar(entorno);
-			if(entorno.sePresionoBoton(entorno.BOTON_DERECHO)&& mago.getMana()>= ulti.getCostoMana()) {
+			if(entorno.sePresionoBoton(entorno.BOTON_IZQUIERDO)) {
+				ulti.lanzar( murcielagos, entorno, hechizoUlti, mago);	
 				gastarMana(ulti.getCostoMana());
-				ulti.lanzar(mago, murcielagos, entorno, hechizoUlti);	
 				hechizoUlti.setSeleccionado(false);
 				
 			}
 		}
 		
+		
+		
+        }
+		else {
+			dibujarGameOver();
+		}
+		
+		
+
         if (mago.colisionConAlgunMurcielago(murcielagos, 0, 3)|| 
         mago.colisionConAlgunMurcielago(murcielagos, 0, 3)||
         mago.colisionConAlgunMurcielago(murcielagos, 3, 0)||
         mago.colisionConAlgunMurcielago(murcielagos, 0, -3)||
         mago.colisionConAlgunMurcielago(murcielagos, -3, 0)) {
-            recibirDanoMago(15);
+            recibirDanoMago(10);
         
         }
-		
-		}
+        }
+        }
 		
 		public void spawnMurcielago() {
 		    int lado = (int)(Math.random() * 4); 
@@ -199,7 +207,7 @@ public class Juego extends InterfaceJuego
 		    }
 		   
 		    murcielagos.add(new Murcielago(x, y, 20, 20, Color.YELLOW, true,5));
-		    
+		    enemigosGenerados++;
 		}
 		
 		public void perseguirMago() {
@@ -236,7 +244,6 @@ public class Juego extends InterfaceJuego
 		}
 		
 		public void gastarMana(int cantidad) {
-			mago.gastarMana(cantidad);
 		    double porcentajeMana = Math.max(0, Math.min(1, mago.getMana() / mago.getManaMaxima()));
 		    
 		    botonMana.setAncho(180 * porcentajeMana);
@@ -261,7 +268,8 @@ public class Juego extends InterfaceJuego
 	            }
 		    }	
 		}
-		
+		entorno.cambiarFont("Arial", 15, Color.WHITE);
+		entorno.escribirTexto("Enemigos ANIQUILADOS: " ,20,20);
 		menu.dibujar(entorno);
 		
 		if(boton !=null) {
@@ -273,40 +281,22 @@ public class Juego extends InterfaceJuego
 			}
 		}
 
-			
-
 		
-		if(hechizoBasico.estaSeleccionado(entorno, entorno.mouseX(), entorno.mouseY(), hechizoBasico)){
-			basico.dibujar(entorno);
-			if(entorno.sePresionoBoton(entorno.BOTON_IZQUIERDO)) {
-				basico.lanzar(mago, murcielagos, entorno, hechizoBasico);
-				hechizoBasico.setSeleccionado(false);
-				
-			}
-			
-			}
-		
-		if(hechizoSec.estaSeleccionado(entorno, entorno.mouseX(), entorno.mouseY(), hechizoSec)){
-		secundario.dibujar(entorno);
-		if(entorno.sePresionoBoton(entorno.BOTON_IZQUIERDO)) {
-			secundario.lanzar(mago, murcielagos, entorno, hechizoSec);
-			hechizoSec.setSeleccionado(false);
-			
-		}
-		
-		}
-		
-		if(hechizoUlti.estaSeleccionado(entorno, entorno.mouseX(), entorno.mouseY(), hechizoUlti)){
-			ulti.dibujar(entorno);
-			if(entorno.sePresionoBoton(entorno.BOTON_IZQUIERDO)) {
-				ulti.lanzar(mago, murcielagos, entorno, hechizoUlti);
-				hechizoUlti.setSeleccionado(false);
-				
-			}
-		}
 	}
+    private void dibujarMenuInicio() {
+        entorno.setBackground(Color.BLACK);
+        menuInicio.dibujar(entorno);
+    }
+    public void salirMenu() {
+    	if (menuInicio.sePresionoIniciar(entorno)) {
+    		enMenuInicio = false;
+    	}
+    }
 	
-	
+	private void dibujarGameOver() {
+        entorno.cambiarFont("Times New Romanddddd", 40, Color.RED);
+        entorno.escribirTexto("perdiste nub", 350, 300);
+    }
 
 	@SuppressWarnings("unused")
 	public static void main(String[] args)
