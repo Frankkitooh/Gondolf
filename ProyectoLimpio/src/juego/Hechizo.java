@@ -12,6 +12,7 @@ public class Hechizo {
     private double radioEfecto;
     private int danio;
     private Color color;
+    private int enemigosAniquilados;
     
     
     public Hechizo(String nombre, double x, double y , int costoMana, double radioEfecto, int danio,
@@ -35,11 +36,11 @@ public class Hechizo {
                 entorno.mouseX() <= (entorno.ancho() - anchoMenu);
     }
     
-    public void lanzar(Mago mago,ArrayList<Murcielago> murcielagos, Entorno entorno, Boton boton) {
-        if (puedeLanzarse(entorno, entorno.ancho()/4, boton) && mago.getMana() >= costoMana) {
-        	 mago.gastarMana(costoMana);
-            entorno.dibujarCirculo(entorno.mouseX(), entorno.mouseY(), radioEfecto, color);// Efecto visual del hechizo
+    public void lanzar(ArrayList<Murcielago> murcielagos, Entorno entorno, Boton boton,Mago mago) {
+        if (puedeLanzarse(entorno, entorno.ancho()/4, boton)) {
             hacerDanio(murcielagos, entorno.mouseX(), entorno.mouseY());
+            mago.gastarMana(costoMana);
+
             boton.setSeleccionado(false);
         }
     }
@@ -52,7 +53,8 @@ public class Hechizo {
             if (m != null && m.estaVivo(m) && colisionConMurcielago(m, x, y)) {
                 m.recibirDano(this.danio);
                 if (!m.estaVivo(m)) {
-                    murcielagos.set(i,null); // Mejor eliminar que poner null
+                    m.asidoaniquilado(m);
+                    murcielagos.set(i,null);
                 }
             }
         }
@@ -69,8 +71,9 @@ public class Hechizo {
         
         return distancia <= (this.radioEfecto + m.getDiametro() / 2);
     }
-    
-    
+
+
+  
    
     // Getters y Setters
     public String getNombre() {
@@ -112,6 +115,7 @@ public class Hechizo {
 	public void setDanio(int danio) {
 		this.danio = danio;
 	}
+
 
    
 }
