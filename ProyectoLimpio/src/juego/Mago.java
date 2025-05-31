@@ -14,9 +14,11 @@ public class Mago {
 	private double mana;
 	private double hpMaxima;
 	private double manaMaxima;
+	private int enemigosAniquilados;
+	private int enemigosColisionados;
 
 	
-	public Mago(double x,double y,double ancho,double alto, Color color, double hp, double mana) {
+	public Mago(double x,double y,double ancho,double alto, Color color, double hp, double mana, int enemigosAniquilados) {
 		this.x = x;
 		this.y = y;
 		this.ancho = ancho;
@@ -26,6 +28,7 @@ public class Mago {
 		this.mana = mana;
 	    this.hpMaxima = hp;
 	    this.manaMaxima = mana;
+	    this.enemigosAniquilados = enemigosAniquilados;
 		
 	
 	}
@@ -151,6 +154,7 @@ public class Mago {
 	            Murcielago m = murcielagos.get(i);
 	            if (m != null && colisionConMurcielago(m, xm, ym)) {
 	                murcielagos.set(i, null); // Asignar null al murciélago que colisionó
+	                this.setEnemigosColisionados(getEnemigosColisionados() +1);
 	                return true; // Se detectó colisión
 	            }
 	        }
@@ -239,6 +243,18 @@ public class Mago {
 	}
 	public void setManaMaxima(double manaMaxima) {
 		this.manaMaxima = manaMaxima;
+	}
+	public int getEnemigosAniquilados() {
+		return enemigosAniquilados;
+	}
+	public void setEnemigosAniquilados(int enemigosAniquilados) {
+		this.enemigosAniquilados = enemigosAniquilados;
+	}
+	public int getEnemigosColisionados() {
+		return enemigosColisionados;
+	}
+	public void setEnemigosColisionados(int enemigosColisionados) {
+		this.enemigosColisionados = enemigosColisionados;
 	}
 
 

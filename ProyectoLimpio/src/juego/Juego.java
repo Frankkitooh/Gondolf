@@ -29,6 +29,7 @@ public class Juego extends InterfaceJuego
     private boolean enMenuInicio;
     private int enemigosGenerados;
     private int enemigosAniquilados;
+    private Menu menuWin;
 
     
 	// Variables y métodos propios de cada grupo
@@ -42,6 +43,7 @@ public class Juego extends InterfaceJuego
 		this.menuInicio = new MenuInicio(entorno.ancho()/2, entorno.alto()/2, 400, 300);
 		this.enMenuInicio = true;
 		this.enemigosGenerados = 0;
+		this.menuWin = new Menu(entorno.ancho(), entorno.alto(), 400, 300);
 		
 		double menuX = entorno.ancho()+entorno.ancho()/4;
 	    double menuY = 0.5*entorno.alto();
@@ -49,7 +51,7 @@ public class Juego extends InterfaceJuego
 		
 		// Inicializar lo que haga falta para el juego
 		// ...
-		mago = new Mago((entorno.ancho()-250)/2, entorno.alto()/2, 25, 40, Color.red, 100, 250);
+		mago = new Mago((entorno.ancho()-250)/2, entorno.alto()/2, 25, 40, Color.red, 100, 250,0);
 		
 		boton = new ArrayList<>();
 	//	boton.add(new Boton (menuX - menuX/3,menuY*0.2, 120, 60, Color.darkGray, "basico"));//hechizo
@@ -111,8 +113,8 @@ public class Juego extends InterfaceJuego
 	    botonMana.dibujar(entorno);
 		
 		if(mago.estaVivo(mago)) {
-			
-			
+			if(mago.getEnemigosAniquilados()<50) {
+		
 		if((entorno.estaPresionada(entorno.TECLA_DERECHA)|| entorno.estaPresionada('d')) && !mago.colisionaPorDerecha(entorno) && mago.colisionConAlgunaRoca(rocas, 5 , 0) == false ) {
 			mago.moverDerecha(entorno);
 		}
@@ -163,14 +165,8 @@ public class Juego extends InterfaceJuego
 				hechizoUlti.setSeleccionado(false);
 				
 			}
-		}
+		}	
 		
-		
-		
-        }
-		else {
-			dibujarGameOver();
-		}
 		
 		
 
@@ -179,12 +175,21 @@ public class Juego extends InterfaceJuego
         mago.colisionConAlgunMurcielago(murcielagos, 3, 0)||
         mago.colisionConAlgunMurcielago(murcielagos, 0, -3)||
         mago.colisionConAlgunMurcielago(murcielagos, -3, 0)) {
-            recibirDanoMago(10);
+            recibirDanoMago(10);              
+        }
         
         }
+			else {
+				dibujarGameWin()
+				;
+			}
+				
+	        }
+		else {
+			dibujarGameOver();
+		}
         }
-        }
-		
+	}
 		public void spawnMurcielago() {
 		    int lado = (int)(Math.random() * 4); 
 		    double x = 0, y = 0;
@@ -205,9 +210,10 @@ public class Juego extends InterfaceJuego
 		        x = -20;
 		        y = Math.random() * entorno.alto();
 		    }
-		   
+		   if (enemigosGenerados - mago.getEnemigosColisionados() < 50) {
 		    murcielagos.add(new Murcielago(x, y, 20, 20, Color.YELLOW, true,5));
 		    enemigosGenerados++;
+		   }
 		}
 		
 		public void perseguirMago() {
@@ -269,7 +275,8 @@ public class Juego extends InterfaceJuego
 		    }	
 		}
 		entorno.cambiarFont("Arial", 15, Color.WHITE);
-		entorno.escribirTexto("Enemigos ANIQUILADOS: " ,20,20);
+		entorno.escribirTexto("Enemigos ANIQUILADOS: " + mago.getEnemigosAniquilados() ,20,20);
+		entorno.escribirTexto("Enemigos COLISONADOS: " + mago.getEnemigosColisionados() ,20,40);
 		menu.dibujar(entorno);
 		
 		if(boton !=null) {
@@ -295,7 +302,12 @@ public class Juego extends InterfaceJuego
 	
 	private void dibujarGameOver() {
         entorno.cambiarFont("Times New Romanddddd", 40, Color.RED);
-        entorno.escribirTexto("perdiste nub", 350, 300);
+        entorno.escribirTexto("GAME OVER", 350, 300);
+    }
+	private void dibujarGameWin() {
+		menuWin.dibujar(entorno);
+        entorno.cambiarFont("Times New Romanddddd", 40, Color.RED);
+        entorno.escribirTexto("YOU WIN", 350, 300);
     }
 
 	@SuppressWarnings("unused")

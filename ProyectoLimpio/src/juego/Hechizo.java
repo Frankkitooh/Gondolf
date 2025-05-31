@@ -12,7 +12,6 @@ public class Hechizo {
     private double radioEfecto;
     private int danio;
     private Color color;
-    private int enemigosAniquilados;
     
     
     public Hechizo(String nombre, double x, double y , int costoMana, double radioEfecto, int danio,
@@ -38,7 +37,7 @@ public class Hechizo {
     
     public void lanzar(ArrayList<Murcielago> murcielagos, Entorno entorno, Boton boton,Mago mago) {
         if (puedeLanzarse(entorno, entorno.ancho()/4, boton)) {
-            hacerDanio(murcielagos, entorno.mouseX(), entorno.mouseY());
+            hacerDanio(murcielagos, entorno.mouseX(), entorno.mouseY(), mago);
             mago.gastarMana(costoMana);
 
             boton.setSeleccionado(false);
@@ -47,18 +46,20 @@ public class Hechizo {
     
 
   
-    public void hacerDanio(ArrayList<Murcielago> murcielagos, double x, double y) {
+    public void hacerDanio(ArrayList<Murcielago> murcielagos, double x, double y, Mago mago) {
         for (int i = murcielagos.size() - 1; i >= 0; i--) {
             Murcielago m = murcielagos.get(i);
             if (m != null && m.estaVivo(m) && colisionConMurcielago(m, x, y)) {
                 m.recibirDano(this.danio);
                 if (!m.estaVivo(m)) {
-                    m.asidoaniquilado(m);
+                    mago.setEnemigosAniquilados(mago.getEnemigosAniquilados()+1);;
                     murcielagos.set(i,null);
                 }
             }
         }
     }
+    
+
     
     public boolean colisionConMurcielago(Murcielago m, double xHechizo, double yHechizo) {
         if (m == null || !m.estaVivo(m)) {
@@ -115,7 +116,5 @@ public class Hechizo {
 	public void setDanio(int danio) {
 		this.danio = danio;
 	}
-
-
    
 }

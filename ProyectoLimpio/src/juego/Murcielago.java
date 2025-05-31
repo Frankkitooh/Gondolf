@@ -13,7 +13,7 @@ public class Murcielago {
 	private Color color;
 	private boolean vivo;
     private int hp;
-    private int contadorSpawn = 0;
+    private int contadorSpawn;
     private int tiempoSpawn = 180;
     private int totalMurcielagosDerrotados = 0;
     private int enemigosAMatar = 50;
@@ -124,6 +124,30 @@ public class Murcielago {
 	}
 	public void setColor(Color color) {
 		this.color = color;
+	}
+
+
+
+	public int getMurcielagosEnPantalla() {
+		return murcielagosEnPantalla;
+	}
+
+
+
+	public void setMurcielagosEnPantalla(int murcielagosEnPantalla) {
+		this.murcielagosEnPantalla = murcielagosEnPantalla;
+	}
+
+
+
+	public int getContadorSpawn() {
+		return contadorSpawn;
+	}
+
+
+
+	public void setContadorSpawn(int contadorSpawn) {
+		this.contadorSpawn = contadorSpawn;
 	}
 
 	
