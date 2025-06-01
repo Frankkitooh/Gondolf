@@ -13,11 +13,13 @@ public class Murcielago {
 	private Color color;
 	private boolean vivo;
     private int hp;
-    private int contadorSpawn;
-    private int murcielagosEnPantalla = 0;
-	
+    private double speed;
+
+
+
+
     
-	public Murcielago(double x, double y, double alto, double diametro, Color color, boolean vivo, int hp) {
+	public Murcielago(double x, double y, double alto, double diametro, Color color, boolean vivo, int hp, double speed) {
 		this.x = x;
 		this.y = y;
 		this.alto = alto;
@@ -25,6 +27,7 @@ public class Murcielago {
 		this.color = color;
 		this.vivo = vivo;
 		this.hp = hp;
+		this.speed = speed;
 	}
 	
 	
@@ -91,7 +94,6 @@ public class Murcielago {
 	}
 	 
 
-
 	public double getX() {
 		return x;
 	}
@@ -125,26 +127,17 @@ public class Murcielago {
 
 
 
-	public int getMurcielagosEnPantalla() {
-		return murcielagosEnPantalla;
+
+
+
+	public double getSpeed() {
+		return speed;
 	}
 
 
 
-	public void setMurcielagosEnPantalla(int murcielagosEnPantalla) {
-		this.murcielagosEnPantalla = murcielagosEnPantalla;
-	}
-
-
-
-	public int getContadorSpawn() {
-		return contadorSpawn;
-	}
-
-
-
-	public void setContadorSpawn(int contadorSpawn) {
-		this.contadorSpawn = contadorSpawn;
+	public void setSpeed(double speed) {
+		this.speed = speed;
 	}
 
 	

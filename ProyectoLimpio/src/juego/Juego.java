@@ -24,13 +24,10 @@ public class Juego extends InterfaceJuego
     private Hechizo secundario;
     private Hechizo ulti;
     private Musica musica;
-    private Musica musicaFin;
     private MenuInicio menuInicio;
     private boolean enMenuInicio;
     private int enemigosGenerados;
-    private int enemigosAniquilados;
     private Menu menuWin;
-	private ArrayList <Pocion> pociones;
 
     
 	// Variables y métodos propios de cada grupo
@@ -56,11 +53,11 @@ public class Juego extends InterfaceJuego
 		
 		boton = new ArrayList<>();
 	//	boton.add(new Boton (menuX - menuX/3,menuY*0.2, 120, 60, Color.darkGray, "basico"));//hechizo
-		hechizoBasico =(new Boton (menuX - menuX/3,menuY*0.2, 120, 60, Color.ORANGE, "Basico",false));
+		hechizoBasico =(new Boton (menuX - menuX/3,menuY*0.2, 120, 60, Color.ORANGE, "basico",false));
 	//	boton.add(new Boton(menuX - menuX/3,menuY*0.45, 120, 60, Color.darkGray,"hechizo"));//hechizo 
-		hechizoSec =(new Boton (menuX - menuX/3,menuY*0.45, 120, 60, Color.ORANGE, "Bombinha",false));
+		hechizoSec =(new Boton (menuX - menuX/3,menuY*0.45, 120, 60, Color.ORANGE, "bomba",false));
 	//	boton.add(new Boton(menuX - menuX/3,menuY*0.70, 120, 60, Color.darkGray,"ulti" ));//hechizo
-		hechizoUlti=(new Boton (menuX - menuX/3,menuY*0.70, 120, 60, Color.ORANGE, "Radio Letal",false));
+		hechizoUlti=(new Boton (menuX - menuX/3,menuY*0.70, 120, 60, Color.ORANGE, "xd lol",false));
 		
 		boton.add(new Boton(menuX - menuX/3.3,menuY*1.25, 180, 30, Color.darkGray, "HP",false));//vida descontada
 		botonVida = new Boton(menuX - menuX/3.3,menuY*1.25, 180, 30, Color.RED, "HP",false);//vida	
@@ -85,10 +82,8 @@ public class Juego extends InterfaceJuego
 		
 		 musica = new Musica("C:/Users/sebinor2/Desktop/El Mago Gondolf/Gondolf/Gondolf/ProyectoLimpio/src/resource/musica-de-mago.wav"); // Ruta del archivo de música
 	        musica.play();
-	        
-	      musicaFin =  new Musica("C:/Users/sebinor2/Desktop/El Mago Gondolf/Gondolf/Gondolf/ProyectoLimpio/src/resource/musica-de-mago.wav");
+	       
 			
-	      pociones = new ArrayList<>();
 
 		// Inicia el juego!
 		this.entorno.iniciar();
@@ -136,7 +131,7 @@ public class Juego extends InterfaceJuego
 
 		mantenerMurcielagos();
 		
-		perseguirMago();
+		mago.perseguirMago(murcielagos, mago);
 		
 		
 		if(hechizoBasico.estaSeleccionado(entorno, entorno.mouseX(), entorno.mouseY(), hechizoBasico)&& mago.getMana()>= basico.getCostoMana() ){
@@ -162,12 +157,13 @@ public class Juego extends InterfaceJuego
 		if(hechizoUlti.estaSeleccionado(entorno, entorno.mouseX(), entorno.mouseY(), hechizoUlti)&& mago.getMana()>= ulti.getCostoMana() ){
 			ulti.dibujar(entorno);
 			if(entorno.sePresionoBoton(entorno.BOTON_IZQUIERDO)) {
-				ulti.lanzar( murcielagos, entorno, hechizoUlti, mago);	
+				ulti.lanzarRelentizar(murcielagos, entorno, hechizoUlti, mago)	;
 				gastarMana(ulti.getCostoMana());
 				hechizoUlti.setSeleccionado(false);
 				
 			}
 		}	
+		
 		
 		
 
@@ -178,17 +174,6 @@ public class Juego extends InterfaceJuego
         mago.colisionConAlgunMurcielago(murcielagos, -3, 0)) {
             recibirDanoMago(10);              
         }
-        
-        if (mago.colisionConAlgunaPocion(pociones, 0, 3)|| 
-                mago.colisionConAlgunaPocion(pociones, 0, 3)||
-                mago.colisionConAlgunaPocion(pociones, 3, 0)||
-                mago.colisionConAlgunaPocion(pociones, 0, -3)||
-                mago.colisionConAlgunaPocion(pociones, -3, 0)) {
-                    //+mana o vida              
-                }
-        
-        colisionPociones();
-        
         
         }
 			else {
@@ -223,22 +208,12 @@ public class Juego extends InterfaceJuego
 		        y = Math.random() * entorno.alto();
 		    }
 		   if (enemigosGenerados - mago.getEnemigosColisionados() < 50) {
-		    murcielagos.add(new Murcielago(x, y, 20, 20, Color.YELLOW, true,5));
+		    murcielagos.add(new Murcielago(x, y, 20, 20, Color.YELLOW, true,5, 1.3));
 		    enemigosGenerados++;
 		   }
 		}
-	
 		
-		
-		public void perseguirMago() {
-		if (murcielagos != null) {
-            for (Murcielago m : murcielagos) {
-                if (m != null && m.estaVivo(m)) {
-                    m.movimiento(1.3, mago); // Velocidad ajustada
-                }
-            }
-		}
-		}
+
 		public void mantenerMurcielagos() {
 		    int vivos = 0;
 		    for (Murcielago m : murcielagos) {
@@ -269,32 +244,7 @@ public class Juego extends InterfaceJuego
 		    botonMana.setAncho(180 * porcentajeMana);
 		}
 		
-		public void colisionPociones() {
-		    for (int i = 0; i < pociones.size(); i++) {
-		        Pocion p = pociones.get(i);
-		        if (p != null && p.isActiva() && mago.colisionConAlgunaPocion(pociones,p.getX(),p.getY())) {
-		            aplicarEfectoPocion(p);
-		            p.setActiva(false);
-		            pociones.set(i,null);
-		            i--;
-		        }
-		    }
-		}
 		
-		public void generarPoti(double x, double y) {
-
-		        String tipo = (Math.random() < 0.5) ? "vida" : "mana";
-			        pociones.add(new Pocion(x,y, 20, null, tipo));	       
-		    }
-		
-		
-		public void aplicarEfectoPocion(Pocion p) {
-		    if (p.getTipo().equals("vida")) {
-		        mago.restaurarVida(p.getCantidadARestaurar());
-		    } else {
-		        mago.restaurarMana(p.getCantidadARestaurar());
-		    }
-		}
 		
 	public void dibujarObjetos() {
 	
@@ -313,11 +263,11 @@ public class Juego extends InterfaceJuego
 	            }
 		    }	
 		}
-
+		entorno.cambiarFont("Arial", 15, Color.WHITE);
+		entorno.escribirTexto("Enemigos ANIQUILADOS: " + mago.getEnemigosAniquilados() ,20,20);
+		entorno.escribirTexto("Enemigos COLISONADOS: " + mago.getEnemigosColisionados() ,20,40);
 		menu.dibujar(entorno);
-		entorno.cambiarFont("Times New Roman", 15, Color.WHITE);
-		entorno.escribirTexto("Enemigos ANIQUILADOS: " + mago.getEnemigosAniquilados() ,800,550);
-		entorno.escribirTexto("Enemigos COLISONADOS: " + mago.getEnemigosColisionados() ,800,570);
+		
 		if(boton !=null) {
 			hechizoBasico.dibujar(entorno);
 			hechizoSec.dibujar(entorno);
@@ -326,12 +276,7 @@ public class Juego extends InterfaceJuego
 				b.dibujar(entorno);
 			}
 		}
-		
-		for (Pocion p : pociones) {
-	        if (p != null && p.isActiva()) {
-	            p.dibujar(entorno);
-	        }
-	    }
+
 		
 	}
     private void dibujarMenuInicio() {
@@ -345,12 +290,12 @@ public class Juego extends InterfaceJuego
     }
 	
 	private void dibujarGameOver() {
-        entorno.cambiarFont("Times New Roman", 40, Color.RED);
+        entorno.cambiarFont("Times New Romanddddd", 40, Color.RED);
         entorno.escribirTexto("GAME OVER", 350, 300);
     }
 	private void dibujarGameWin() {
 		menuWin.dibujar(entorno);
-        entorno.cambiarFont("Times New Roman", 40, Color.RED);
+        entorno.cambiarFont("Times New Romanddddd", 40, Color.RED);
         entorno.escribirTexto("YOU WIN", 350, 300);
     }
 

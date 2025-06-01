@@ -173,55 +173,17 @@ public class Mago {
 		 this.mana-=cantidad;
 	 }
 	 
-	 public boolean colisionConPocion(Pocion p, double xp, double yp) {
-		 if(p == null) {
-				return false;
-			}
-			double ladoIzquierdo = this.x - (this.ancho/2);
-			double ladoDerecho = this.x + (this.ancho/2);
-			double ladoSuperior = this.y - (this.alto/2);
-			double ladoInferior = this.y + (this.alto/2);
-			
-			double xCercano = Math.max(ladoIzquierdo, Math.min(p.getX(), ladoDerecho));
-			double yCercano = Math.max(ladoSuperior, Math.min(p.getY(), ladoInferior));
-			
-			double alto= yCercano - p.getY();
-			double ancho= xCercano - p.getX();
-			double distancia = (int) Math.sqrt( Math.pow(alto, 2) + Math.pow(ancho, 2));
-			
-			boolean colisiona = distancia <= (p.getDiametro() / 2);
-
-	        if (colisiona) {
-	            if (xp > 0 && this.x < p.getX()) return true;
-	            if (xp < 0 && this.x > p.getX()) return true;
-	            if (yp > 0 && this.y < p.getY()) return true; 
-	            if (yp < 0 && this.y > p.getY()) return true;
-	        }
-
-	        return false;
-	    }
 	 
-		public boolean colisionConAlgunaPocion(ArrayList<Pocion> pociones, double xp, double yp) {
-		    if (pociones == null || pociones.isEmpty()) {
-		    	return false;
-		    }
-
-		    for (Pocion p : pociones) {
-		        if (colisionConPocion(p, xp,yp)) {
-		            return true;
-		        }
-		    }
-		    return false;
-		}
-
-		public void restaurarVida(int cantidad) {
-		    this.hp = Math.min(this.hp + cantidad, this.hpMaxima);
-		}
-
-		public void restaurarMana(int cantidad) {
-		    this.mana = Math.min(this.mana + cantidad, this.manaMaxima);
-		}
 	 
+		public void perseguirMago(ArrayList<Murcielago> murcielagos, Mago mago) {
+		if (murcielagos != null) {
+         for (Murcielago m : murcielagos) {
+             if (m != null && m.estaVivo(m)) {
+                 m.movimiento(m.getSpeed(), mago); // Velocidad ajustada
+             }
+         }
+		}
+		}
 	 
 	public double getX() {
 		return x;
