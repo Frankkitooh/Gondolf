@@ -14,9 +14,6 @@ public class Murcielago {
 	private boolean vivo;
     private int hp;
     private int contadorSpawn;
-    private int tiempoSpawn = 180;
-    private int totalMurcielagosDerrotados = 0;
-    private int enemigosAMatar = 50;
     private int murcielagosEnPantalla = 0;
 	
     

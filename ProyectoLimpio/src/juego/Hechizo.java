@@ -13,7 +13,6 @@ public class Hechizo {
     private int danio;
     private Color color;
     
-    
     public Hechizo(String nombre, double x, double y , int costoMana, double radioEfecto, int danio,
 			Color color) {
 
@@ -39,7 +38,6 @@ public class Hechizo {
         if (puedeLanzarse(entorno, entorno.ancho()/4, boton)) {
             hacerDanio(murcielagos, entorno.mouseX(), entorno.mouseY(), mago);
             mago.gastarMana(costoMana);
-
             boton.setSeleccionado(false);
         }
     }
@@ -58,7 +56,7 @@ public class Hechizo {
             }
         }
     }
-    
+   
 
     
     public boolean colisionConMurcielago(Murcielago m, double xHechizo, double yHechizo) {
@@ -72,8 +70,7 @@ public class Hechizo {
         
         return distancia <= (this.radioEfecto + m.getDiametro() / 2);
     }
-
-
+    
   
    
     // Getters y Setters
@@ -116,5 +113,23 @@ public class Hechizo {
 	public void setDanio(int danio) {
 		this.danio = danio;
 	}
+
+	public double getX() {
+		return x;
+	}
+
+	public void setX(double x) {
+		this.x = x;
+	}
+
+	public double getY() {
+		return y;
+	}
+
+	public void setY(double y) {
+		this.y = y;
+	}
+
+	
    
 }
