@@ -28,7 +28,7 @@ public class Juego extends InterfaceJuego
     private boolean enMenuInicio;
     private int enemigosGenerados;
     private Menu menuWin;
-
+	private ArrayList <Pocion> pociones;
     
 	// Variables y métodos propios de cada grupo
 	// ...
@@ -79,7 +79,7 @@ public class Juego extends InterfaceJuego
 		rocas.add(new Roca(entorno.ancho()/3 + entorno.ancho()/3, entorno.alto()*0.75, 50, 20, Color.gray));
 
 		murcielagos = new ArrayList<>();
-		
+		pociones = new ArrayList<>();
 		 musica = new Musica("C:/Users/sebinor2/Desktop/El Mago Gondolf/Gondolf/Gondolf/ProyectoLimpio/src/resource/musica-de-mago.wav"); // Ruta del archivo de música
 	        musica.play();
 	       
@@ -174,7 +174,15 @@ public class Juego extends InterfaceJuego
         mago.colisionConAlgunMurcielago(murcielagos, -3, 0)) {
             recibirDanoMago(10);              
         }
+        if (mago.colisionConAlgunaPocion(pociones, 0, 3)|| 
+                mago.colisionConAlgunaPocion(pociones, 0, 3)||
+                mago.colisionConAlgunaPocion(pociones, 3, 0)||
+                mago.colisionConAlgunaPocion(pociones, 0, -3)||
+                mago.colisionConAlgunaPocion(pociones, -3, 0)) {
+                    //+mana o vida              
+                }
         
+        verificarColisionPociones();
         }
 			else {
 				dibujarGameWin()
@@ -244,7 +252,48 @@ public class Juego extends InterfaceJuego
 		    botonMana.setAncho(180 * porcentajeMana);
 		}
 		
+		public void verificarColisionPociones() {
+		    for (int i = 0; i < pociones.size(); i++) {
+		        Pocion p = pociones.get(i);
+		        if (p != null && mago.colisionConPocion(p, 0, 0)) {
+		            boolean pociónRecogida = false;
+		            
+		            if (p.getTipo().equals("vida")) {
+		                if (mago.getHp() < mago.getHpMaxima()) {
+		                    mago.restaurarVida(p.getCantidadARestaurar());
+		                    pociónRecogida = true;
+		                } else {
+		                    entorno.escribirTexto("Vida al máximo!", mago.getX(), mago.getY() - 30);
+		                }
+		            } 
+		            else if (p.getTipo().equals("mana")) {
+		                if (mago.getMana() < mago.getManaMaxima()) {
+		                    mago.restaurarMana(p.getCantidadARestaurar());
+		                    pociónRecogida = true;
+		                } else {
+		                    entorno.escribirTexto("Maná al máximo!", mago.getX(), mago.getY() - 30);
+		                }
+		            }
+		            
+		            if (pociónRecogida) {
+		                pociones.set(i, null);
+		            }
+		        }
+		    }
+		}
+		public void generarPoti(double x, double y) {
+		        String tipo = (Math.random() < 0.5) ? "vida" : "mana";
+			        pociones.add(new Pocion(x,y, 20, null, tipo));	       
+		    }
 		
+		
+		public void aplicarEfectoPocion(Pocion p) {
+		    if (p.getTipo().equals("vida")) {
+		        mago.restaurarVida(p.getCantidadARestaurar());
+		    } else {
+		        mago.restaurarMana(p.getCantidadARestaurar());
+		    }
+		}
 		
 	public void dibujarObjetos() {
 	
@@ -263,6 +312,11 @@ public class Juego extends InterfaceJuego
 	            }
 		    }	
 		}
+	    for (Pocion p : pociones) {
+	        if (p != null) {
+	            p.dibujar(entorno);
+	        }
+	    }
 		entorno.cambiarFont("Arial", 15, Color.WHITE);
 		entorno.escribirTexto("Enemigos ANIQUILADOS: " + mago.getEnemigosAniquilados() ,20,20);
 		entorno.escribirTexto("Enemigos COLISONADOS: " + mago.getEnemigosColisionados() ,20,40);

@@ -10,7 +10,6 @@ public class Pocion {
     private Color color;
     private String tipo;
     private int cantidadARestaurar;
-    private boolean activa;
 	
 	public Pocion(double x, double y, double diametro, Color color, String tipo) {
 		this.x = x;
@@ -18,7 +17,6 @@ public class Pocion {
 		this.diametro = diametro;
 		this.tipo = tipo;
 		this.cantidadARestaurar = cantidadARestaurar;
-		this.activa = activa;
 	}
 	
 	
@@ -106,16 +104,6 @@ public class Pocion {
 	}
 
 
-
-	public boolean isActiva() {
-		return activa;
-	}
-
-
-
-	public void setActiva(boolean activa) {
-		this.activa = activa;
-	}
 
 
 	
