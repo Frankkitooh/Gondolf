@@ -6,7 +6,6 @@ import entorno.Entorno;
 
 public class Roca {
 	private double x,y;
-	private double alto;
 	private double diametro;
 	private Color color;
 	
@@ -14,7 +13,6 @@ public class Roca {
 public Roca(double x, double y, double diametro, double alto, Color color) {
 	this.x = x;
 	this.y = y;
-	this.alto = alto;
 	this.diametro = diametro;
 	this.color = color;
 }
@@ -37,14 +35,6 @@ public double getY() {
 
 public void setY(double y) {
 	this.y = y;
-}
-
-public double getAlto() {
-	return alto;
-}
-
-public void setAlto(double alto) {
-	this.alto = alto;
 }
 
 public Color getColor() {
