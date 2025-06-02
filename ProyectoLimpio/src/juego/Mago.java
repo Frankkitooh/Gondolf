@@ -219,7 +219,7 @@ public class Mago {
 			        for (int i = 0; i < pociones.size(); i++) {
 			            Pocion p = pociones.get(i);
 			            if (p != null && colisionConPocion(p, xp, yp)) {
-			                pociones.set(i, null); // Asignar null al murciélago que colisionó
+			                pociones.set(i, null);
 			                
 			                return true; // Se detectó colisión
 			            }
