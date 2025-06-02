@@ -215,18 +215,34 @@ public class Mago {
 		    }
 		 
 			public boolean colisionConAlgunaPocion(ArrayList<Pocion> pociones, double xp, double yp) {
-			    if (pociones == null || pociones.isEmpty()) {
-			    	return false;
-			    }
-
-			    for (Pocion p : pociones) {
-			        if (colisionConPocion(p, xp,yp)) {
-			            return true;
+			    if (pociones != null) {
+			        for (int i = 0; i < pociones.size(); i++) {
+			            Pocion p = pociones.get(i);
+			            if (p != null && colisionConPocion(p, xp, yp)) {
+			                pociones.set(i, null); // Asignar null al murciélago que colisionó
+			                
+			                return true; // Se detectó colisión
+			            }
 			        }
 			    }
-			    return false;
+			    return false; // No hubo colisión
 			}
 		
+			
+			public void restaurarVida(int cantidadARestaurar) {
+				 this.hp += cantidadARestaurar;
+				 if (this.hp > 100) {
+			            this.hp = 100; // No permite valores mayores al maximo
+			        }
+			}
+			public void restaurarMana(int cantidadARestaurar) {
+				 this.mana += cantidadARestaurar;
+				 if (this.mana > 250) {
+			            this.hp = 250; // No permite valores mayores al maximo
+			        }
+			}
+			
+			
 	public double getX() {
 		return x;
 	}
@@ -308,6 +324,7 @@ public class Mago {
 	public void setEnemigosColisionados(int enemigosColisionados) {
 		this.enemigosColisionados = enemigosColisionados;
 	}
+	
 
 
 }

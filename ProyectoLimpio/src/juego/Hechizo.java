@@ -57,6 +57,7 @@ public class Hechizo {
                 }
             }
         }
+
     }
     
     public void relentizar(ArrayList<Murcielago> murcielagos, double x, double y, Mago mago) {

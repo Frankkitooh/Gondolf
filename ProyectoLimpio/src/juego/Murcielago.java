@@ -75,6 +75,10 @@ public class Murcielago {
 		    
 
 		}
+	
+	
+	
+	
 	public void recibirDano(int cantidad) {
         hp -= cantidad;
         if (hp <= 0) {

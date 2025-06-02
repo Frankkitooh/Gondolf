@@ -6,11 +6,12 @@ import entorno.Entorno;
 
 public class Roca {
 	private double x,y;
+
 	private double diametro;
 	private Color color;
 	
 	
-public Roca(double x, double y, double diametro, double alto, Color color) {
+public Roca(double x, double y, double diametro, Color color) {
 	this.x = x;
 	this.y = y;
 	this.diametro = diametro;
