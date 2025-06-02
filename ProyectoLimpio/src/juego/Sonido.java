@@ -26,7 +26,7 @@ public Sonido(String ubicacion){
 
 public void reproducir() {
 	if(clip != null) {
-		
+		clip.setFramePosition(0);
 		clip.start();
 	}
 	
