@@ -383,7 +383,7 @@ public class Juego extends InterfaceJuego
     }
 	private void dibujarGameWin() {
 		menuWin.dibujar(entorno);
-        entorno.cambiarFont("Times New Romanddddd", 40, Color.RED);
+        entorno.cambiarFont("Times New Roman", 40, Color.RED);
         entorno.escribirTexto("YOU WIN", 350, 300);
     }
 
